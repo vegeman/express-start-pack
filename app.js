@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 // const logger = require('morgan');
 const logger = require('./lib/logger.js')
 const helmet = require('helmet')
+// import _ from 'lodash'
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
