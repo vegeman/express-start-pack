@@ -7,7 +7,6 @@ import helmet from 'helmet'
 
 import indexRouter from './routes/index'
 
-require('./lib/cron_job.js')
 const app = express()
 
 // view engine setup
