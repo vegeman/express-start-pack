@@ -29,10 +29,10 @@ app.use(morgan('short', {
 app.use(express.urlencoded({
   extended: false
 }))
-app.use(cookieParser())
+app.use(cookieParser('???????'))
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use('/', indexRouter)
 
 // catch 404 and forward to error handler
