@@ -1,5 +1,6 @@
 import express from 'express'
 import auth from '../lib/auth'
+import user from '../model/user'
 const router = express.Router()
 
 router.post('/signin', (req, res, next) => {
@@ -24,17 +25,16 @@ router.post('/signin', (req, res, next) => {
   })
 })
 
-router.get('/users/:id', auth.verify, (req, res) => {
+router.get('/users/:id', auth.verify, async(req, res) => {
   // #swagger.tags = ['User']
   // #swagger.description = 'Endpoint to get a specific user.'
-  const users = []
-  const data = users.find(e => e.id === req.params.id)
+  const data = await user.get(e => e.id === req.params.id)
 
   /* #swagger.responses[200] = {
       schema: { "$ref": "#/definitions/resFormat" },
       description: "User registered successfully." } */
   res.status(200).json({
-    data: [],
+    data: data,
     message: 'Successfully found'
   })
 })
