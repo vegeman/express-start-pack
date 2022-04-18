@@ -87,29 +87,14 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "decoded": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "User registered successfully.",
-            "schema": {
-              "$ref": "#/definitions/resFormat"
-            }
+            "description": "OK"
           },
-          "403": {
-            "description": "Forbidden"
+          "400": {
+            "description": "Bad Request"
           }
         }
       }

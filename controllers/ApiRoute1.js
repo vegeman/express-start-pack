@@ -1,9 +1,11 @@
 import express from 'express'
 import auth from '../lib/auth'
+import resFormat from '../lib/resFormat'
+import errorHandler from '../lib/errorHandler'
 import user from '../model/user'
 const router = express.Router()
 
-router.post('/signin', (req, res, next) => {
+router.post('/signin', errorHandler((req, res, next) => {
   /*
     #swagger.tags = ['User']
     #swagger.description = 'Endpoint to sign in a specific user'
@@ -23,20 +25,19 @@ router.post('/signin', (req, res, next) => {
     data: [],
     message: 'Authentication successed'
   })
-})
+}))
 
-router.get('/users/:id', auth.verify, async(req, res) => {
+router.get('/users/:id', errorHandler(async(req, res) => {
   // #swagger.tags = ['User']
   // #swagger.description = 'Endpoint to get a specific user.'
-  const data = await user.get(e => e.id === req.params.id)
-
-  /* #swagger.responses[200] = {
-      schema: { "$ref": "#/definitions/resFormat" },
-      description: "User registered successfully." } */
-  res.status(200).json({
-    data: data,
-    message: 'Successfully found'
-  })
-})
+  await user.get(req.params.id)
+    .then(data => {
+      res.status(200).send(resFormat.return(data))
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).send(resFormat.return('Bad Request', 400))
+    })
+}))
 
 module.exports = router
