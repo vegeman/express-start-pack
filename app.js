@@ -12,13 +12,8 @@ import indexRouter from './routes/index'
 
 const app = express()
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'ejs')
-
 app.use(helmet())
 app.use(cors())
-// app.use(logger('dev'));
 app.use(express.json())
 app.use(morgan('short', {
   skip: function(req, res) {
@@ -43,13 +38,17 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
-
   // render the error page
-  res.status(err.status || 500)
-  res.json({ message: 'error' })
+  const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '')
+    .split(',')[0]
+    .trim()
+  console.error(req.url, ip)
+  if (err.status !== 404) console.log(err)
+  if (err.status === 404) {
+    return res.status(404).send('Not Found')
+  }
+
+  res.status(err.status || 500).send('Internal Server Error')
 })
 
 module.exports = app
