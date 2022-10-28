@@ -1,5 +1,4 @@
 import express from 'express'
-import auth from '../lib/auth'
 import resFormat from '../lib/resFormat'
 import errorHandler from '../lib/errorHandler'
 import user from '../model/user'
@@ -8,8 +7,10 @@ const router = express.Router()
 router.post('/signin', errorHandler((req, res, next) => {
   /*
     #swagger.tags = ['User']
-    #swagger.description = 'Endpoint to sign in a specific user'
-    #swagger.parameters['obj'] = {
+    #swagger.security = [{"apiKeyAuth": []}]
+    #swagger.summary = 'Endpoint to sign in a specific user'
+    #swagger.description = ''
+    #swagger.parameters['payload'] = {
       in: 'body',
       description: 'User information.',
       required: true,
@@ -17,22 +18,31 @@ router.post('/signin', errorHandler((req, res, next) => {
         user: 'name'
       }
     }
-    #swagger.security = [{
-      "apiKeyAuth": []
-    }]
   */
   res.status(201).json({
     data: [],
-    message: 'Authentication successed'
+    message: 'Authentication successed',
   })
 }))
 
 router.get('/users/:id', errorHandler(async(req, res) => {
-  // #swagger.tags = ['User']
-  // #swagger.description = 'Endpoint to get a specific user.'
+  /*
+    #swagger.tags = ['User']
+    #swagger.summary = 'Endpoint to get a specific user.'
+    #swagger.description = ''
+    #swagger.parameters['condition'] = {
+      in: 'query',
+      description: '',
+      required: false
+    }
+  */
   await user.get(req.params.id)
-    .then(data => {
-      res.status(200).send(resFormat.return(data))
+    .then(result => {
+      if (result.status) {
+        return res.status(200).send(resFormat.return(result))
+      } else {
+        res.status(`${result.code}`.slice(0, 3) * 1).send(resFormat.return(result.message, result.code))
+      }
     })
     .catch(err => {
       console.error(err)

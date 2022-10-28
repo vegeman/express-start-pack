@@ -2,7 +2,6 @@ import createError from 'http-errors'
 import express from 'express'
 import path from 'path'
 import cookieParser from 'cookie-parser'
-import logger from './lib/logger.js'
 import helmet from 'helmet'
 import cors from 'cors'
 import morgan from 'morgan'
@@ -24,15 +23,17 @@ app.use(express.json())
 app.use(morgan('short', {
   skip: function(req, res) {
     return req.url === '/pingpong'
-  }
+  },
 }))
 app.use(express.urlencoded({
-  extended: false
+  extended: false,
 }))
-app.use(cookieParser('???????'))
+app.use(cookieParser(''))
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, { swaggerOptions: { operationsSorter: 'method' }}))
+if (process.env.NODE_ENV === 'development') {
+  app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile, { swaggerOptions: { operationsSorter: 'method' }}))
+}
 app.use('/', indexRouter)
 
 // catch 404 and forward to error handler
@@ -48,12 +49,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500)
-  res.render('error')
+  res.json({ message: 'error' })
 })
-
-logger.error('This is a message.')
-logger.debug('This is a message.')
-logger.warn('This is a message.')
-logger.info('This is a message.')
 
 module.exports = app

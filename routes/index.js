@@ -7,6 +7,6 @@ router.use(apiV1)
 // router.use('/v2', apiV2)
 
 /* GET home page. */
-router.get('/', (req, res) => res.send())
+router.get('/pingpong', (req, res) => res.send())
 
 module.exports = router
