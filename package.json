@@ -8,6 +8,10 @@
     "test": "eslint --fix './**/*.js' && env MONGO_HOST=127.0.0.1 MONGO_PORT=27017 APP_ENV=unit_test nyc mocha --require @babel/register --recursive test/**/*.test.js --exit",
     "start": "pm2-runtime ecosystem.config.js --env production"
   },
+  "nyc": {
+    "sourceMap": false,
+    "instrument": false
+  },
   "dependencies": {
     "@babel/core": "^7.10.4",
     "@babel/node": "^7.10.4",
